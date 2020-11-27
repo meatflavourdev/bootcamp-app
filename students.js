@@ -10,12 +10,14 @@ const pool = new Pool({
 pool
   .query(
     `
-SELECT id, name, cohort_id
-FROM students
+SELECT s.id as id, s.name as name, c.name AS cohort_name
+FROM students AS s
+JOIN cohorts AS c ON c.id = s.cohort_id
 LIMIT 5;
 `
   )
-  .then((res) => {
-    console.log(res.rows);
-  })
-  .catch((err) => console.error("query error", err.stack));
+  .then(res => {
+    res.rows.forEach(user => {
+      console.log(`${user.name} has an id of ${user.id} and was in the ${user.cohort_name} cohort`);
+    })
+  });
